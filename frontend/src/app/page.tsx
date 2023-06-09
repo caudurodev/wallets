@@ -14,8 +14,16 @@ export default function Home() {
   )
 }
 
-const fetchGraphql = async (query) => {
-  const data = await request(process.env.NEXT_PUBLIC_NHOST_BACKEND_URL, query)
+type Wallet = {
+  id: string
+  name: string
+}
+
+const fetchGraphql = async (query: string): Promise<Wallet[]> => {
+  if (!process.env.NEXT_PUBLIC_NHOST_BACKEND_URL) {
+    throw new Error('NEXT_PUBLIC_NHOST_BACKEND_URL is not set')
+  }
+  const data: Wallet[] = await request(process.env.NEXT_PUBLIC_NHOST_BACKEND_URL, query)
   return data
 }
 
@@ -25,7 +33,7 @@ const Wallets = () => {
 
   console.log('data', data)
   return (<div>
-    {data?.wallet?.map(w => <div>{w.name}</div>)}
+    {data?.map((w, id) => <div key={id}>{w.name}</div>)}
   </div>)
 }
 
