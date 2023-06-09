@@ -23,15 +23,15 @@ const fetchGraphql = async (query: string): Promise<Wallet[]> => {
   if (!process.env.NEXT_PUBLIC_NHOST_BACKEND_URL) {
     throw new Error('NEXT_PUBLIC_NHOST_BACKEND_URL is not set')
   }
-  const data: Wallet[] = await request(process.env.NEXT_PUBLIC_NHOST_BACKEND_URL, query)
-  return data
+  const { wallet }: Wallet[] = await request(process.env.NEXT_PUBLIC_NHOST_BACKEND_URL, query)
+  return wallet
 }
 
 
 const Wallets = () => {
   const { isLoading, error, data } = useQuery('wallets', () => fetchGraphql(GET_WALLETS));
-
   console.log('data', data)
+  console.log('data', process.env.NEXT_PUBLIC_NHOST_BACKEND_URL)
   return (<div>
     {data?.map((w, id) => <div key={id}>{w.name}</div>)}
   </div>)
